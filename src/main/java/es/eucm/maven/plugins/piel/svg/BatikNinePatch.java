@@ -46,13 +46,12 @@ public class BatikNinePatch extends BatikPNG {
 		rectangle.width = (int) (size.x - 2);
 		rectangle.height = (int) (size.y - 2);
 		pngTranscoder.addTranscodingHint(PNGTranscoder.KEY_AOI, rectangle);
-		convertSize(svg, centerFile.getAbsolutePath(),
-				(int) (scale * rectangle.width),
-				(int) (scale * rectangle.height));
+		convertSize(svg, centerFile.getAbsolutePath(), scale * rectangle.width,
+				scale * rectangle.height);
 		pngTranscoder.removeTranscodingHint(PNGTranscoder.KEY_AOI);
 		try {
-			size.x = (size.x - 2) * scale + 2;
-			size.y = (size.y - 2) * scale + 2;
+			size.x = (float) Math.floor((size.x - 2) * scale + 2);
+			size.y = (float) Math.floor((size.y - 2) * scale + 2);
 
 			BufferedImage ninePatch = new BufferedImage((int) size.x,
 					(int) size.y, BufferedImage.TYPE_4BYTE_ABGR);

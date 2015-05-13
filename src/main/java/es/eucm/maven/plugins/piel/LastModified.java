@@ -38,7 +38,7 @@ public class LastModified {
 	public LastModified(File folder) {
 		fh = new FileHandle(new File(folder, FILE));
 		if (fh.exists()) {
-			for (String line : fh.readString().split("\n")) {
+			for (String line : fh.readString().replace("\r", "").split("\n")) {
 				String[] parts = line.split(";");
 				if (parts.length == 2) {
 					lastModified.put(parts[0], Long.parseLong(parts[1]));
