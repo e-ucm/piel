@@ -18,7 +18,7 @@ If you want to use **Piel** as a library, you must add the following dependency 
 <dependency>
 	<groupId>es.e-ucm.maven.plugins</groupId>
 	<artifactId>piel</artifactId>
-	<version>1.0</version>
+	<version>1.1</version>
 </dependency>
 ```
 
