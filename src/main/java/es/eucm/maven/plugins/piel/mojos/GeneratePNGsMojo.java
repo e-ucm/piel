@@ -47,6 +47,6 @@ public class GeneratePNGsMojo extends AbstractMojo {
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		getLog().info("PNGs generation for " + scales.length + " scales");
-		new GeneratePNGs(svgDir, ninePatchDir, outputDir, scales).execute();
+		new GeneratePNGs().execute(svgDir, ninePatchDir, outputDir, scales);
 	}
 }

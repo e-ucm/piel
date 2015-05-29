@@ -66,7 +66,7 @@ myproject
 ### Using Java
 
 ```java
-new GeneratePNGs("/myproject/svg", "/myproject/9patch", "/myproject/png", new String[]{"1", "2", "0.5"}).execute();
+new GeneratePNGs().execute("/myproject/svg", "/myproject/9patch", "/myproject/png", new String[]{"1", "2", "0.5"});
 ```
 
 ### Using Maven plugin
@@ -77,7 +77,7 @@ new GeneratePNGs("/myproject/svg", "/myproject/9patch", "/myproject/png", new St
         <plugin>
             <groupId>es.e-ucm.maven.plugins</groupId>
             <artifactId>piel</artifactId>
-            <version>1.0</version>
+            <version>1.1.2-SNAPSHOT</version>
             <executions>
                 <execution>
                     <phase>clean</phase>
@@ -268,6 +268,8 @@ Suppose you have the following project layout:
 ```
 myproject
     + Roboto.ttf
+    + images
+        - photo.png
     + svg
         - circle.svg
         - triangle.svg
@@ -279,6 +281,8 @@ And you want to generate resources of scale 1 and 2, and font sizes of 14 and 47
 
 ```
 myproject
+    + images
+        - photo.png (80x80)
     + svg
         - circle.svg (50x50)
         - triangle.svg (100x100)
@@ -286,6 +290,7 @@ myproject
         - button.svg (30x30 + 2x2 9 patch border = 32x32)
     + png
         - scale1.0
+            - photo.png (80x80)
             - circle.png (50x50)
             - triangle.png (100x100)
             - button.9.png (30x30 + 2x2 9 patch border = 32x32)            
@@ -294,6 +299,7 @@ myproject
             - Roboto-47.fnt
             - Roboto-47.png
         - scale2.0
+            - photo.png (160x160)
             - circle.png (100x100)
             - triangle.png (200x200)
             - button.9.png (60x60 + 2x2 9 patch border = 62x62)
@@ -301,7 +307,7 @@ myproject
             - Roboto-14.png
             - Roboto-47.fnt (This is equivalent to Roboto 94 in scale 1.0)
             - Roboto-47.png            
-    + skin (atlas include font images)
+    + skin (atlas include font atlas and images from image folder)
         - scale1.0
             - Roboto-14.fnt
             - Roboto-47.fnt
@@ -317,7 +323,7 @@ myproject
 ### Using Java
 
 ```java
-new GeneratePNGs("/myproject/svg", "/myproject/9patch", "/myproject/png", new String[]{"1", "2", "0.5"}, new File[]{"Roboto.ttf"}, new String[]{"14", "47"}, TextureFilter.Linear, 1024, "skin", "myproject/skins").execute();
+new GenerateSkins("/myproject/images", "/myproject/svg", "/myproject/9patch", "/myproject/png", new String[]{"1", "2", "0.5"}, new File[]{"Roboto.ttf"}, new String[]{"14", "47"}, TextureFilter.Linear, 1024, "skin", "myproject/skins").execute();
 ```
 
 ### Using Maven plugin

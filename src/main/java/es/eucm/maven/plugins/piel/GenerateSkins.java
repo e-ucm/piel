@@ -28,6 +28,8 @@ public class GenerateSkins {
 
 	private File outputPngDir;
 
+	private File imagesDir;
+
 	private String[] scales;
 
 	private File[] ttfs;
@@ -44,19 +46,20 @@ public class GenerateSkins {
 
 	private File outputDir;
 
-	public GenerateSkins(String svgDir, String ninePatchDir,
+	public GenerateSkins(String imagesDir, String svgDir, String ninePatchDir,
 			String outputPngDir, String[] scales, File[] ttfs,
 			String[] fontSizes, TextureFilter filter, Integer size,
 			String atlasName, String outputDir) {
-		this(new File(svgDir), new File(ninePatchDir), new File(outputPngDir),
-				scales, ttfs, fontSizes, filter, size, null, atlasName,
-				new File(outputDir));
+		this(new File(imagesDir), new File(svgDir), new File(ninePatchDir),
+				new File(outputPngDir), scales, ttfs, fontSizes, filter, size,
+				null, atlasName, new File(outputDir));
 	}
 
-	public GenerateSkins(File svgDir, File ninePatchDir, File outputPngDir,
-			String[] scales, File[] ttfs, String[] fontSizes,
-			TextureFilter filter, Integer size, Integer maxSize,
-			String atlasName, File outputDir) {
+	public GenerateSkins(File imagesDir, File svgDir, File ninePatchDir,
+			File outputPngDir, String[] scales, File[] ttfs,
+			String[] fontSizes, TextureFilter filter, Integer size,
+			Integer maxSize, String atlasName, File outputDir) {
+		this.imagesDir = imagesDir;
 		this.svgDir = svgDir;
 		this.ninePatchDir = ninePatchDir;
 		this.outputPngDir = outputPngDir;
@@ -71,8 +74,14 @@ public class GenerateSkins {
 	}
 
 	public void execute() {
-		boolean updated = new GeneratePNGs(svgDir, ninePatchDir, outputPngDir,
-				scales).execute();
+		boolean updated = new GeneratePNGs().execute(svgDir, ninePatchDir,
+				outputPngDir, scales);
+
+		if (imagesDir != null) {
+			if (new GenerateImages().execute(imagesDir, outputPngDir, scales)) {
+				updated = true;
+			}
+		}
 
 		FileHandle fonts = new FileHandle(new File(outputPngDir, ".ttffonts"));
 		String generated = "";

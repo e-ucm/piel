@@ -35,6 +35,9 @@ public class GenerateSkinsMojo extends AbstractMojo {
 	@Parameter(property = "skin.svg")
 	private File svgDir;
 
+	@Parameter(property = "skin.images")
+	private File imageDir;
+
 	@Parameter(property = "skin.ninePatch")
 	private File ninePatchDir;
 
@@ -72,8 +75,8 @@ public class GenerateSkinsMojo extends AbstractMojo {
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		new GenerateSkins(svgDir, ninePatchDir, outputPngDir, scales, ttfs,
-				fontSizes, filter, size, maxSize, atlasName, outputDir)
+		new GenerateSkins(imageDir, svgDir, ninePatchDir, outputPngDir, scales,
+				ttfs, fontSizes, filter, size, maxSize, atlasName, outputDir)
 				.execute();
 	}
 }
