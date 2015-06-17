@@ -95,6 +95,10 @@ public abstract class GenerateScales {
 	public boolean update(File inputDir, File outputDir, Float[] scales) {
 		LastModified imagesModified = new LastModified(inputDir);
 
+		if (!inputDir.exists()) {
+			inputDir.mkdirs();
+		}
+
 		for (File image : inputDir.listFiles()) {
 			if (validExtensions.contains(new FileHandle(image).extension()
 					.toLowerCase(), false)
