@@ -18,35 +18,34 @@ package es.eucm.maven.plugins.piel;
 import es.eucm.maven.plugins.piel.fonts.TTFtoFNT;
 
 import java.io.File;
+import java.util.Map.Entry;
+import java.util.Properties;
 
 public class GenerateFonts {
-	private File[] ttfs;
+	private Properties ttfs;
 
 	private File outputDir;
 
 	private String[] scales;
 
-	private String[] sizes;
-
 	private Integer atlasSize;
 
-	public GenerateFonts(File[] ttfs, File outputDir, String[] scales,
-			String[] sizes, Integer atlasSize) {
+	public GenerateFonts(Properties ttfs, File outputDir, String[] scales,
+			Integer atlasSize) {
 		this.ttfs = ttfs;
 		this.outputDir = outputDir;
 		this.scales = scales;
-		this.sizes = sizes;
 		this.atlasSize = atlasSize;
 	}
 
 	public void execute() {
-		for (File ttf : ttfs) {
-			TTFtoFNT toFNT = new TTFtoFNT(ttf);
+		for (Entry<Object, Object> e : ttfs.entrySet()) {
+			TTFtoFNT toFNT = new TTFtoFNT(new File(e.getKey().toString()));
 			for (String scaleString : scales) {
 				float scale = Float.parseFloat(scaleString);
 				File output = new File(outputDir, GeneratePNGs.PREFIX + scale);
 				output.mkdirs();
-				for (String sizeString : sizes) {
+				for (String sizeString : e.getValue().toString().split(";")) {
 					int size = Integer.parseInt(sizeString);
 					toFNT.toFnt(size, scale, output, atlasSize);
 				}

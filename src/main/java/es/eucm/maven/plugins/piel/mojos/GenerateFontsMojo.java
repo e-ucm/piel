@@ -23,12 +23,13 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
+import java.util.Properties;
 
 @Mojo(name = "fonts", requiresProject = false, inheritByDefault = false)
 public class GenerateFontsMojo extends AbstractMojo {
 
 	@Parameter(property = "font.ttfs")
-	private File[] ttfs;
+	private Properties ttfs;
 
 	/** Output folder for the atlas */
 	@Parameter(property = "font.outputDir")
@@ -37,14 +38,11 @@ public class GenerateFontsMojo extends AbstractMojo {
 	@Parameter(property = "font.scales")
 	private String[] scales;
 
-	@Parameter(property = "font.sizes")
-	private String[] sizes;
-
 	@Parameter(property = "font.atlasSize", defaultValue = "1024")
 	private Integer atlasSize;
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		new GenerateFonts(ttfs, outputDir, scales, sizes, atlasSize).execute();
+		new GenerateFonts(ttfs, outputDir, scales, atlasSize).execute();
 	}
 }

@@ -19,6 +19,8 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 
 import java.io.File;
+import java.util.Map.Entry;
+import java.util.Properties;
 
 public class GenerateSkins {
 
@@ -32,9 +34,7 @@ public class GenerateSkins {
 
 	private String[] scales;
 
-	private File[] ttfs;
-
-	private String[] fontSizes;
+	private Properties ttfs;
 
 	private TextureFilter filter;
 
@@ -47,25 +47,24 @@ public class GenerateSkins {
 	private File outputDir;
 
 	public GenerateSkins(String imagesDir, String svgDir, String ninePatchDir,
-			String outputPngDir, String[] scales, File[] ttfs,
-			String[] fontSizes, TextureFilter filter, Integer size,
-			String atlasName, String outputDir) {
+			String outputPngDir, String[] scales, Properties ttfs,
+			TextureFilter filter, Integer size, String atlasName,
+			String outputDir) {
 		this(new File(imagesDir), new File(svgDir), new File(ninePatchDir),
-				new File(outputPngDir), scales, ttfs, fontSizes, filter, size,
-				null, atlasName, new File(outputDir));
+				new File(outputPngDir), scales, ttfs, filter, size, null,
+				atlasName, new File(outputDir));
 	}
 
 	public GenerateSkins(File imagesDir, File svgDir, File ninePatchDir,
-			File outputPngDir, String[] scales, File[] ttfs,
-			String[] fontSizes, TextureFilter filter, Integer size,
-			Integer maxSize, String atlasName, File outputDir) {
+			File outputPngDir, String[] scales, Properties ttfs,
+			TextureFilter filter, Integer size, Integer maxSize,
+			String atlasName, File outputDir) {
 		this.imagesDir = imagesDir;
 		this.svgDir = svgDir;
 		this.ninePatchDir = ninePatchDir;
 		this.outputPngDir = outputPngDir;
 		this.scales = scales;
 		this.ttfs = ttfs;
-		this.fontSizes = fontSizes;
 		this.filter = filter;
 		this.size = size;
 		this.atlasName = atlasName;
@@ -85,21 +84,19 @@ public class GenerateSkins {
 
 		FileHandle fonts = new FileHandle(new File(outputPngDir, ".ttffonts"));
 		String generated = "";
-		for (File file : ttfs) {
-			generated += file.getAbsolutePath() + ";";
+		for (Entry<Object, Object> e : ttfs.entrySet()) {
+			generated += e.getKey().toString() + ";" + e.getValue().toString();
 		}
+
 		for (String scale : scales) {
 			generated += scale + ";";
 		}
-		for (String fontSize : fontSizes) {
-			generated += fontSize + ";";
-		}
+
 		generated += size;
 
 		if (!fonts.exists() || !generated.equals(fonts.readString())) {
 			System.out.println("Generating fonts from TTFs");
-			new GenerateFonts(ttfs, outputPngDir, scales, fontSizes, size / 4)
-					.execute();
+			new GenerateFonts(ttfs, outputPngDir, scales, size / 4).execute();
 			fonts.writeString(generated, false);
 			updated = true;
 		}

@@ -15,15 +15,17 @@
  */
 package es.eucm.maven.plugins.piel.mojos;
 
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import es.eucm.maven.plugins.piel.GenerateSkins;
+import java.io.File;
+import java.util.Properties;
+
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
-import java.io.File;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import es.eucm.maven.plugins.piel.GenerateSkins;
 
 @Mojo(name = "skins", requiresProject = false, inheritByDefault = false)
 public class GenerateSkinsMojo extends AbstractMojo {
@@ -49,10 +51,7 @@ public class GenerateSkinsMojo extends AbstractMojo {
 	private String[] scales;
 
 	@Parameter(property = "skin.ttfs")
-	private File[] ttfs;
-
-	@Parameter(property = "skin.fontSizes")
-	private String[] fontSizes;
+	private Properties ttfs;
 
 	/** Filter for the texture for the atlas **/
 	@Parameter(property = "skin.atlas.filter", defaultValue = "Nearest")
@@ -76,7 +75,6 @@ public class GenerateSkinsMojo extends AbstractMojo {
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		new GenerateSkins(imageDir, svgDir, ninePatchDir, outputPngDir, scales,
-				ttfs, fontSizes, filter, size, maxSize, atlasName, outputDir)
-				.execute();
+				ttfs, filter, size, maxSize, atlasName, outputDir).execute();
 	}
 }
