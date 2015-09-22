@@ -18,7 +18,7 @@ If you want to use **Piel** as a library, you must add the following dependency 
 <dependency>
 	<groupId>es.e-ucm.maven.plugins</groupId>
 	<artifactId>piel</artifactId>
-	<version>1.1</version>
+	<version>1.1.2-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -87,7 +87,7 @@ new GeneratePNGs().execute("/myproject/svg", "/myproject/9patch", "/myproject/pn
                     <configuration>
                         <svgDir>${basedir}/svg</svgDir>
                         <ninePatchDir>${basedir}/9patch</ninePatchDir>
-                        <outputDir>${basedir}/png</outputPngDir>
+                        <outputDir>${basedir}/png</outputDir>
                         <scales>
                             <scale>1</scale>
                             <scale>2</scale>
