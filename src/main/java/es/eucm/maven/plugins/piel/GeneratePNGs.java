@@ -38,12 +38,13 @@ public class GeneratePNGs extends GenerateScales {
 		boolean modified = false;
 		svGtoPNG = png;
 		outputExtension = ".png";
-		if (super.execute(svgDir, outputDir, scales)) {
+		if (svgDir != null && super.execute(svgDir, outputDir, scales)) {
 			modified = true;
 		}
 		svGtoPNG = ninePatch;
 		outputExtension = ".9.png";
-		if (super.execute(ninePatchDir, outputDir, scales)) {
+		if (ninePatchDir != null
+				&& super.execute(ninePatchDir, outputDir, scales)) {
 			modified = true;
 		}
 		return modified;
