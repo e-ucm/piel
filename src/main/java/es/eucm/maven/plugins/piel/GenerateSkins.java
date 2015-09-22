@@ -85,9 +85,10 @@ public class GenerateSkins {
 			}
 		}
 
-		FileHandle fonts = new FileHandle(new File(outputPngDir, ".ttffonts"));
-		String generated = "";
 		if (ttfs != null) {
+			FileHandle fonts = new FileHandle(new File(outputPngDir,
+					".ttffonts"));
+			String generated = "";
 			for (Entry<Object, Object> e : ttfs.entrySet()) {
 				generated += e.getKey().toString() + ";"
 						+ e.getValue().toString();
