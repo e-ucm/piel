@@ -50,9 +50,11 @@ public class GenerateSkins {
 			String outputPngDir, String[] scales, Properties ttfs,
 			TextureFilter filter, Integer size, String atlasName,
 			String outputDir) {
-		this(new File(imagesDir), new File(svgDir), new File(ninePatchDir),
-				new File(outputPngDir), scales, ttfs, filter, size, null,
-				atlasName, new File(outputDir));
+		this(imagesDir == null ? null : new File(imagesDir),
+				svgDir == null ? null : new File(svgDir),
+				ninePatchDir == null ? null : new File(ninePatchDir),
+				outputPngDir == null ? null : new File(outputPngDir), scales,
+				ttfs, filter, size, null, atlasName, new File(outputDir));
 	}
 
 	public GenerateSkins(File imagesDir, File svgDir, File ninePatchDir,
@@ -84,8 +86,11 @@ public class GenerateSkins {
 
 		FileHandle fonts = new FileHandle(new File(outputPngDir, ".ttffonts"));
 		String generated = "";
-		for (Entry<Object, Object> e : ttfs.entrySet()) {
-			generated += e.getKey().toString() + ";" + e.getValue().toString();
+		if (ttfs != null) {
+			for (Entry<Object, Object> e : ttfs.entrySet()) {
+				generated += e.getKey().toString() + ";"
+						+ e.getValue().toString();
+			}
 		}
 
 		for (String scale : scales) {
@@ -94,7 +99,8 @@ public class GenerateSkins {
 
 		generated += size;
 
-		if (!fonts.exists() || !generated.equals(fonts.readString())) {
+		if (ttfs != null
+				&& (!fonts.exists() || !generated.equals(fonts.readString()))) {
 			System.out.println("Generating fonts from TTFs");
 			new GenerateFonts(ttfs, outputPngDir, scales, size / 4).execute();
 			fonts.writeString(generated, false);
