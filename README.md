@@ -87,7 +87,7 @@ new GeneratePNGs().execute("/myproject/svg", "/myproject/9patch", "/myproject/pn
                     <configuration>
                         <svgDir>${basedir}/svg</svgDir>
                         <ninePatchDir>${basedir}/9patch</ninePatchDir>
-                        <outputDir>${basedir}/png</outputPngDir>
+                        <outputDir>${basedir}/png</outputDir>
                         <scales>
                             <scale>1</scale>
                             <scale>2</scale>

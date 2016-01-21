@@ -75,8 +75,11 @@ public class GenerateSkins {
 	}
 
 	public void execute() {
-		boolean updated = new GeneratePNGs().execute(svgDir, ninePatchDir,
-				outputPngDir, scales);
+		boolean updated = false;
+		if (svgDir != null || ninePatchDir != null) {
+			updated = new GeneratePNGs().execute(svgDir, ninePatchDir,
+					outputPngDir, scales);
+		}
 
 		if (imagesDir != null) {
 			if (new GenerateImages().execute(imagesDir, outputPngDir, scales)) {
@@ -84,27 +87,31 @@ public class GenerateSkins {
 			}
 		}
 
-		FileHandle fonts = new FileHandle(new File(outputPngDir, ".ttffonts"));
-		String generated = "";
+		if (ttfs != null) {
+			FileHandle fonts = new FileHandle(new File(outputPngDir,
+					".ttffonts"));
+			String generated = "";
 		if (ttfs != null) {
 			for (Entry<Object, Object> e : ttfs.entrySet()) {
 				generated += e.getKey().toString() + ";"
 						+ e.getValue().toString();
 			}
-		}
+			}
 
-		for (String scale : scales) {
-			generated += scale + ";";
-		}
+			for (String scale : scales) {
+				generated += scale + ";";
+			}
 
-		generated += size;
+			generated += size;
 
 		if (ttfs != null
 				&& (!fonts.exists() || !generated.equals(fonts.readString()))) {
-			System.out.println("Generating fonts from TTFs");
-			new GenerateFonts(ttfs, outputPngDir, scales, size / 4).execute();
-			fonts.writeString(generated, false);
-			updated = true;
+				System.out.println("Generating fonts from TTFs");
+				new GenerateFonts(ttfs, outputPngDir, scales, size / 4)
+						.execute();
+				fonts.writeString(generated, false);
+				updated = true;
+			}
 		}
 
 		if (updated) {
