@@ -91,11 +91,11 @@ public class GenerateSkins {
 			FileHandle fonts = new FileHandle(new File(outputPngDir,
 					".ttffonts"));
 			String generated = "";
-		if (ttfs != null) {
-			for (Entry<Object, Object> e : ttfs.entrySet()) {
-				generated += e.getKey().toString() + ";"
-						+ e.getValue().toString();
-			}
+			if (ttfs != null) {
+				for (Entry<Object, Object> e : ttfs.entrySet()) {
+					generated += e.getKey().toString() + ";"
+							+ e.getValue().toString();
+				}
 			}
 
 			for (String scale : scales) {
@@ -104,8 +104,9 @@ public class GenerateSkins {
 
 			generated += size;
 
-		if (ttfs != null
-				&& (!fonts.exists() || !generated.equals(fonts.readString()))) {
+			if (ttfs != null
+					&& (!fonts.exists() || !generated
+							.equals(fonts.readString()))) {
 				System.out.println("Generating fonts from TTFs");
 				new GenerateFonts(ttfs, outputPngDir, scales, size / 4)
 						.execute();
