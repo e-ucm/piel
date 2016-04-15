@@ -16,8 +16,8 @@ If you want to use **Piel** as a library, you must add the following dependency 
 
 ```xml
 <dependency>
-	<groupId>es.e-ucm.maven.plugins</groupId>
-	<artifactId>piel</artifactId>
+    <groupId>es.e-ucm.piel</groupId>
+	<artifactId>common</artifactId>
 	<version>1.2.1</version>
 </dependency>
 ```
@@ -45,15 +45,15 @@ myproject
     + 9patch
         - button.svg (30x30 + 2x2 9 patch border = 32x32)
     + png
-        - scale1.0
+        + 1.0
             - circle.png (50x50)
             - triangle.png (100x100)
             - button.9.png (30x30 + 2x2 9 patch border = 32x32)
-        - scale2.0
+        + 2.0
             - circle.png (100x100)
             - triangle.png (200x200)
             - button.9.png (60x60 + 2x2 9 patch border = 62x62)
-        - scale0.5
+        + 0.5
             - circle.png (25x25)
             - triangle.png (50x50)
             - button.9.png (15x15 + 2x2 9 patch border = 17x17)

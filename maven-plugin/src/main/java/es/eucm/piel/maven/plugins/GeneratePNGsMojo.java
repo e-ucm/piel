@@ -32,27 +32,24 @@ public class GeneratePNGsMojo extends AbstractMojo {
 	 * Folder with images to generate the atlas. If this folder contains other
 	 * folders, it generates an atlas per folder
 	 */
-	@Parameter(property = "png.svgDir")
+	@Parameter(property = "png.svg")
 	private File svgDir;
 
-	@Parameter(property = "png.ninePatchDir")
+	@Parameter(property = "png.ninePatch")
 	private File ninePatchDir;
 
 	/** Output folder for the atlas */
-	@Parameter(property = "png.outputDir")
+	@Parameter(property = "png.output")
 	private File outputDir;
 
 	@Parameter(property = "png.scales")
 	private String[] scales;
-
-	@Parameter(property = "png.force", defaultValue = "false")
-	private Boolean force;
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		getLog().info("PNGs generation for " + scales.length + " scales");
 		ScalesConfig config = new ScalesConfig();
 		config.scales = Utils.toFloat(scales);
-		new GeneratePNGs().execute(svgDir, ninePatchDir, config);
+		new GeneratePNGs().execute(svgDir, ninePatchDir, outputDir, config);
 	}
 }

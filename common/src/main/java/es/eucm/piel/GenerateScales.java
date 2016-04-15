@@ -25,11 +25,6 @@ public abstract class GenerateScales {
 
 	public static class ScalesConfig {
 
-		/**
-		 * Each scale folder will be name ${scalePrefix}${scale}
-		 */
-		public String scalePrefix = "scale";
-
 		public float[] scales;
 
 		/**
@@ -68,8 +63,7 @@ public abstract class GenerateScales {
 		if (outputDir.exists()) {
 			for (File file : outputDir.listFiles()) {
 				try {
-					Float scale = Float.parseFloat(file.getName().substring(
-							configuration.scalePrefix.length()));
+					Float scale = Float.parseFloat(file.getName());
 					if (file.isDirectory() && !list.contains(scale)) {
 						System.out.println("Scale " + scale + " was removed");
 						new FileHandle(file).deleteDirectory();
@@ -87,8 +81,7 @@ public abstract class GenerateScales {
 
 		// Generate new scales
 		for (float scale : configuration.scales) {
-			File scaledFolder = new File(outputDir, configuration.scalePrefix
-					+ scale);
+			File scaledFolder = new File(outputDir, Float.toString(scale));
 			if (!scaledFolder.exists()) {
 				System.out.println("New scale found: " + scale
 						+ " Generating...");
@@ -132,7 +125,7 @@ public abstract class GenerateScales {
 				String pngName = new FileHandle(image).nameWithoutExtension()
 						+ outputExtension;
 				for (float scale : conf.scales) {
-					File output = new File(outputDir, conf.scalePrefix + scale);
+					File output = new File(outputDir, Float.toString(scale));
 					File png = new File(output, pngName);
 					System.out.println(image.getAbsolutePath()
 							+ " was updated --> " + png.getAbsolutePath());
@@ -142,7 +135,7 @@ public abstract class GenerateScales {
 		}
 
 		for (float scale : conf.scales) {
-			File output = new File(outputDir, conf.scalePrefix + scale);
+			File output = new File(outputDir, Float.toString(scale));
 			for (String name : imagesModified.getRemoved()) {
 				String fileName = name.substring(0, name.lastIndexOf('.'))
 						+ outputExtension;

@@ -48,8 +48,7 @@ public class GenerateFonts {
 			TTFtoFNT toFNT = new TTFtoFNT(fontFile);
 			System.out.println("Generating font " + fontFile.getName());
 			for (float scale : fontsConfig.scales) {
-				File output = new File(outputDir, fontsConfig.scalePrefix
-						+ scale);
+				File output = new File(outputDir, Float.toString(scale));
 				output.mkdir();
 				System.out.println("Generating scale " + scale);
 				for (int size : font.sizes) {
