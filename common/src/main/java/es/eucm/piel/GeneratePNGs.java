@@ -34,17 +34,17 @@ public class GeneratePNGs extends GenerateScales {
 	}
 
 	public boolean execute(File svgDir, File ninePatchDir, File outputDir,
-			String[] scales, boolean force) {
+			ScalesConfig conf) {
 		boolean modified = false;
 		svGtoPNG = png;
 		outputExtension = ".png";
-		if (svgDir != null && super.execute(svgDir, outputDir, scales, force)) {
+		if (svgDir != null && super.execute(svgDir, outputDir, conf)) {
 			modified = true;
 		}
 		svGtoPNG = ninePatch;
 		outputExtension = ".9.png";
 		if (ninePatchDir != null
-				&& super.execute(ninePatchDir, outputDir, scales, force)) {
+				&& super.execute(ninePatchDir, outputDir, conf)) {
 			modified = true;
 		}
 		return modified;

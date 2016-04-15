@@ -16,105 +16,80 @@
 package es.eucm.piel;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import es.eucm.piel.GenerateAtlas.AtlasConfig;
+import es.eucm.piel.GenerateFonts.FontConfig;
+import es.eucm.piel.GenerateFonts.FontsConfig;
 
 import java.io.File;
-import java.util.Map.Entry;
-import java.util.Properties;
 
 public class GenerateSkins {
 
-	private File svgDir;
+	public static class SkinsConfig {
 
-	private File ninePatchDir;
+		/**
+		 * Folder where svgs are stored
+		 */
+		public String svgs = "svg";
 
-	private File outputPngDir;
+		/**
+		 * Folder where 9 patches are stored
+		 */
+		public String patches = "9patch";
 
-	private File imagesDir;
+		/**
+		 * Folder where images are stored
+		 */
+		public String images = "images";
 
-	private String[] scales;
+		/**
+		 * Folder to store temporal pngs cache
+		 */
+		public String png = ".png";
 
-	private Properties ttfs;
-
-	private TextureFilter filter;
-
-	private Integer size;
-
-	private Integer maxSize;
-
-	private String atlasName;
-
-	private File outputDir;
-
-	private boolean force;
-
-	public GenerateSkins(String imagesDir, String svgDir, String ninePatchDir,
-			String outputPngDir, String[] scales, Properties ttfs,
-			TextureFilter filter, Integer size, String atlasName,
-			String outputDir, boolean force) {
-		this(imagesDir == null ? null : new File(imagesDir),
-				svgDir == null ? null : new File(svgDir),
-				ninePatchDir == null ? null : new File(ninePatchDir),
-				outputPngDir == null ? null : new File(outputPngDir), scales,
-				ttfs, filter, size, null, atlasName, new File(outputDir), force);
 	}
 
-	public GenerateSkins(File imagesDir, File svgDir, File ninePatchDir,
-			File outputPngDir, String[] scales, Properties ttfs,
-			TextureFilter filter, Integer size, Integer maxSize,
-			String atlasName, File outputDir, boolean force) {
-		this.imagesDir = imagesDir;
-		this.svgDir = svgDir;
-		this.ninePatchDir = ninePatchDir;
-		this.outputPngDir = outputPngDir;
-		this.scales = scales;
-		this.ttfs = ttfs;
-		this.filter = filter;
-		this.size = size;
-		this.atlasName = atlasName;
-		this.outputDir = outputDir;
-		this.maxSize = maxSize;
-		this.force = force;
-	}
-
-	public void execute() {
+	public void execute(File inputDir, File outputDir, SkinsConfig skinsConfig,
+			FontsConfig fontsConfig, AtlasConfig atlasConfig) {
 		boolean updated = false;
-		if (svgDir != null || ninePatchDir != null) {
-			updated = new GeneratePNGs().execute(svgDir, ninePatchDir,
-					outputPngDir, scales, force);
+
+		File pngOutput = new File(inputDir, skinsConfig.png);
+		if (new GeneratePNGs()
+				.execute(new File(inputDir, skinsConfig.svgs), new File(
+						inputDir, skinsConfig.patches), pngOutput, fontsConfig)) {
+			updated = true;
 		}
 
-		if (imagesDir != null) {
-			if (new GenerateImages().execute(imagesDir, outputPngDir, scales,
-					force)) {
-				updated = true;
-			}
+		if (new GenerateImages().execute(
+				new File(inputDir, skinsConfig.images), pngOutput, fontsConfig)) {
+			updated = true;
 		}
 
-		if (ttfs != null) {
-			FileHandle fonts = new FileHandle(new File(outputPngDir,
+		if (fontsConfig.fonts != null) {
+			FileHandle fontsCached = new FileHandle(new File(pngOutput,
 					".ttffonts"));
+			// TODO remove cached font and not present in the given
+			// configuration
 			String generated = "";
-			if (ttfs != null) {
-				for (Entry<Object, Object> e : ttfs.entrySet()) {
-					generated += e.getKey().toString() + ";"
-							+ e.getValue().toString();
+			for (FontConfig font : fontsConfig.fonts) {
+				generated += font.file;
+				generated += font.characters;
+				for (int size : font.sizes) {
+					generated += size + ";";
 				}
 			}
 
-			for (String scale : scales) {
+			for (float scale : fontsConfig.scales) {
 				generated += scale + ";";
 			}
 
-			generated += size;
+			generated += fontsConfig.atlasSize;
 
-			if (ttfs != null
-					&& (force || (!fonts.exists() || !generated.equals(fonts
-							.readString())))) {
+			if (fontsConfig.force
+					|| (!fontsCached.exists() || !generated.equals(fontsCached
+							.readString()))) {
 				System.out.println("Generating fonts from TTFs");
-				new GenerateFonts(ttfs, outputPngDir, scales, size / 2)
-						.execute();
-				fonts.writeString(generated, false);
+				new GenerateFonts().execute(pngOutput, fontsConfig);
+				fontsCached.writeString(generated, false);
 				updated = true;
 			} else {
 				System.out.println("No TTF fonts updates.");
@@ -122,38 +97,22 @@ public class GenerateSkins {
 		}
 
 		if (updated) {
-			new GenerateAtlas(outputPngDir, outputDir, filter, size, maxSize,
-					atlasName, true).execute();
+			System.out.println("Resources were updated. Regenerating skins...");
+			new GenerateAtlas().execute(pngOutput, outputDir, atlasConfig);
 
 			// Extra tasks
 			// Copy .fnt
-			for (FileHandle folder : new FileHandle(outputPngDir).list()) {
+			for (FileHandle folder : new FileHandle(pngOutput).list()) {
 				if (folder.isDirectory()) {
 					for (FileHandle fnt : folder.list(".fnt")) {
-						fnt.copyTo(new FileHandle(new File(outputDir, folder
+						fnt.moveTo(new FileHandle(new File(outputDir, folder
 								.name() + "/" + fnt.name())));
 					}
 				}
 			}
+		} else {
+			System.out.println("No updates were found.");
 		}
 	}
 
-	public static void main(String[] args) {
-		Properties fonts = new Properties();
-		fonts.put(
-				"/home/bender/Dropbox/Proyectos/anserran.com/Pong/smashingball/assets-raw/ttfs/Oswald-Bold.ttf",
-				"10");
-		new GenerateSkins(
-				null,
-				"/home/bender/Dropbox/Proyectos/anserran.com/Pong/smashingball/assets-raw/svg",
-				null,
-				"/home/bender/Dropbox/Proyectos/anserran.com/Pong/smashingball/assets-raw/png",
-				new String[] { "1", "2" },
-				fonts,
-				TextureFilter.Linear,
-				1024,
-				"skin",
-				"/home/bender/Dropbox/Proyectos/anserran.com/Pong/smashingball/assets",
-				true).execute();
-	}
 }

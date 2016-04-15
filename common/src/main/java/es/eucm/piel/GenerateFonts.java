@@ -15,43 +15,47 @@
  */
 package es.eucm.piel;
 
+import es.eucm.piel.GenerateScales.ScalesConfig;
 import es.eucm.piel.fonts.TTFtoFNT;
 
 import java.io.File;
-import java.util.Map.Entry;
-import java.util.Properties;
 
 public class GenerateFonts {
-	private Properties ttfs;
 
-	private File outputDir;
+	public static class FontsConfig extends ScalesConfig {
 
-	private String[] scales;
+		public FontConfig[] fonts;
 
-	private Integer atlasSize;
+		public int atlasSize;
 
-	public GenerateFonts(Properties ttfs, File outputDir, String[] scales,
-			Integer atlasSize) {
-		this.ttfs = ttfs;
-		this.outputDir = outputDir;
-		this.scales = scales;
-		this.atlasSize = atlasSize;
 	}
 
-	public void execute() {
-		for (Entry<Object, Object> e : ttfs.entrySet()) {
-			File fontFile = new File(e.getKey().toString());
+	public static class FontConfig {
+		public String file;
+
+		public int[] sizes;
+
+		public String characters;
+	}
+
+	public void execute(File outputDir, FontsConfig fontsConfig) {
+		if (!outputDir.exists()) {
+			outputDir.mkdirs();
+		}
+
+		for (FontConfig font : fontsConfig.fonts) {
+			File fontFile = new File(font.file);
 			TTFtoFNT toFNT = new TTFtoFNT(fontFile);
 			System.out.println("Generating font " + fontFile.getName());
-			for (String scaleString : scales) {
-				float scale = Float.parseFloat(scaleString);
-				File output = new File(outputDir, GeneratePNGs.PREFIX + scale);
-				output.mkdirs();
+			for (float scale : fontsConfig.scales) {
+				File output = new File(outputDir, fontsConfig.scalePrefix
+						+ scale);
+				output.mkdir();
 				System.out.println("Generating scale " + scale);
-				for (String sizeString : e.getValue().toString().split(";")) {
-					System.out.println("Generating size " + sizeString);
-					int size = Integer.parseInt(sizeString);
-					toFNT.toFnt(size, scale, output, atlasSize);
+				for (int size : font.sizes) {
+					System.out.println("Generating size " + size);
+					toFNT.toFnt(size, scale, fontsConfig.atlasSize,
+							font.characters, output);
 				}
 			}
 		}

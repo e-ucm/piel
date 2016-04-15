@@ -15,7 +15,8 @@
  */
 package es.eucm.piel.maven.plugins;
 
-import es.eucm.maven.plugins.piel.GeneratePNGs;
+import es.eucm.piel.GeneratePNGs;
+import es.eucm.piel.GenerateScales.ScalesConfig;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -50,7 +51,8 @@ public class GeneratePNGsMojo extends AbstractMojo {
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		getLog().info("PNGs generation for " + scales.length + " scales");
-		new GeneratePNGs().execute(svgDir, ninePatchDir, outputDir, scales,
-				force);
+		ScalesConfig config = new ScalesConfig();
+		config.scales = Utils.toFloat(scales);
+		new GeneratePNGs().execute(svgDir, ninePatchDir, config);
 	}
 }

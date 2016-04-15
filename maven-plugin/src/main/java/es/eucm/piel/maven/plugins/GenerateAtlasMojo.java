@@ -17,7 +17,8 @@ package es.eucm.piel.maven.plugins;
 
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.math.MathUtils;
-import es.eucm.maven.plugins.piel.GenerateAtlas;
+import es.eucm.piel.GenerateAtlas;
+import es.eucm.piel.GenerateAtlas.AtlasConfig;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -33,8 +34,8 @@ public class GenerateAtlasMojo extends AbstractMojo {
 	 * Folder with images to generate the atlas. If this folder contains other
 	 * folders, it generates an atlas per folder
 	 */
-	@Parameter(property = "atlas.sourceDir")
-	private File sourceDir;
+	@Parameter(property = "atlas.inputDir")
+	private File inputDir;
 
 	/** Output folder for the atlas */
 	@Parameter(property = "atlas.outputDir")
@@ -54,14 +55,14 @@ public class GenerateAtlasMojo extends AbstractMojo {
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		if (sourceDir == null || !sourceDir.exists()) {
+		if (inputDir == null || !inputDir.exists()) {
 			throw new MojoExecutionException("Invalid source directory: "
-					+ sourceDir);
+					+ inputDir);
 		}
 
 		if (outputDir == null) {
 			throw new MojoExecutionException("Invalid output directory: "
-					+ sourceDir);
+					+ inputDir);
 		}
 
 		if (!outputDir.exists()) {
@@ -75,7 +76,10 @@ public class GenerateAtlasMojo extends AbstractMojo {
 			throw new MojoExecutionException("size should be a power of 2");
 		}
 
-		new GenerateAtlas(sourceDir, outputDir, filter, size, null, atlasName,
-				false).execute();
+		AtlasConfig config = new AtlasConfig();
+		config.atlasName = atlasName;
+		config.filter = filter;
+		config.size = size;
+		new GenerateAtlas().execute(inputDir, outputDir, config);
 	}
 }

@@ -34,6 +34,10 @@ public class TTFtoFNT {
 
 	private FreeTypeFontGenerator generator;
 
+	/**
+	 * @param ttf
+	 *            A file pointing to a ttf font
+	 */
 	public TTFtoFNT(File ttf) {
 		LwjglNativesLoader.load();
 		ttfFh = new FileHandle(ttf);
@@ -41,14 +45,16 @@ public class TTFtoFNT {
 		ttfName = ttfFh.nameWithoutExtension();
 	}
 
-	public void toFnt(int size, float scale, File dst, int atlasSize) {
+	public void toFnt(int size, float scale, int atlasSize, String characters,
+			File dst) {
 		int fontSize = (int) (size * scale);
 		PixmapPacker packer = new PixmapPacker(atlasSize, atlasSize,
 				Pixmap.Format.RGBA8888, 2, false);
 
 		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 		parameter.packer = packer;
-		parameter.characters = FreeTypeFontGenerator.DEFAULT_CHARS;
+		parameter.characters = characters == null ? FreeTypeFontGenerator.DEFAULT_CHARS
+				: characters;
 		parameter.size = fontSize;
 		parameter.flip = false;
 

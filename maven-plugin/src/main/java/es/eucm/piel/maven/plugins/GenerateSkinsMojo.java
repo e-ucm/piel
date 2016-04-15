@@ -16,7 +16,11 @@
 package es.eucm.piel.maven.plugins;
 
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import es.eucm.maven.plugins.piel.GenerateSkins;
+import es.eucm.piel.GenerateAtlas.AtlasConfig;
+import es.eucm.piel.GenerateFonts.FontsConfig;
+import es.eucm.piel.GenerateSkins;
+import es.eucm.piel.GenerateSkins.SkinsConfig;
+import es.eucm.piel.maven.plugins.GenerateFontsMojo.FontParameter;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -24,33 +28,19 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
-import java.util.Properties;
 
 @Mojo(name = "skins", requiresProject = false, inheritByDefault = false)
 public class GenerateSkinsMojo extends AbstractMojo {
 
-	/**
-	 * Folder with images to generate the atlas. If this folder contains other
-	 * folders, it generates an atlas per folder
-	 */
-	@Parameter(property = "skin.svg")
-	private File svgDir;
-
-	@Parameter(property = "skin.images")
-	private File imageDir;
-
-	@Parameter(property = "skin.ninePatch")
-	private File ninePatchDir;
-
 	/** Output folder for the atlas */
-	@Parameter(property = "skin.png")
-	private File outputPngDir;
+	@Parameter(property = "skin.input")
+	private File inputDir;
 
 	@Parameter(property = "skin.scales")
 	private String[] scales;
 
 	@Parameter(property = "skin.ttfs")
-	private Properties ttfs;
+	private FontParameter[] ttfs;
 
 	/** Filter for the texture for the atlas **/
 	@Parameter(property = "skin.atlas.filter", defaultValue = "Nearest")
@@ -58,7 +48,10 @@ public class GenerateSkinsMojo extends AbstractMojo {
 
 	/** Size for the atlas pages, use for width and height. Must be a power of 2 **/
 	@Parameter(property = "skin.atlas.size", defaultValue = "1024")
-	private Integer size;
+	private Integer atlasSize;
+
+	@Parameter(property = "skin.fonts.atlasSize", defaultValue = "1024")
+	private Integer fontsAtlasSize;
 
 	/** Size for the atlas pages, use for width and height. Must be a power of 2 **/
 	@Parameter(property = "skin.atlas.size", defaultValue = "2048")
@@ -68,16 +61,26 @@ public class GenerateSkinsMojo extends AbstractMojo {
 	@Parameter(property = "skin.atlas.name", defaultValue = "atlas")
 	private String atlasName;
 
-	@Parameter(property = "skin.output")
-	private File outputDir;
-
 	@Parameter(property = "skin.force", defaultValue = "false")
 	private Boolean force;
 
+	@Parameter(property = "skin.output")
+	private File outputDir;
+
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		new GenerateSkins(imageDir, svgDir, ninePatchDir, outputPngDir, scales,
-				ttfs, filter, size, maxSize, atlasName, outputDir, force)
-				.execute();
+		AtlasConfig atlasConfig = new AtlasConfig();
+		atlasConfig.size = atlasSize;
+		atlasConfig.atlasName = atlasName;
+		atlasConfig.filter = filter;
+		if (fontsAtlasSize == null) {
+			fontsAtlasSize = atlasSize / 2;
+		}
+		FontsConfig fontsConfig = Utils
+				.fontConfig(scales, ttfs, fontsAtlasSize);
+		fontsConfig.force = force;
+		new GenerateSkins().execute(inputDir, outputDir, new SkinsConfig(),
+				fontsConfig, atlasConfig);
+
 	}
 }
