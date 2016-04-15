@@ -13,68 +13,69 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package es.eucm.maven.plugins.piel.mojos;
+package es.eucm.piel.maven.plugins;
 
-import java.io.File;
-import java.util.Properties;
-
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.math.MathUtils;
+import es.eucm.maven.plugins.piel.GenerateAtlas;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import es.eucm.maven.plugins.piel.GenerateSkins;
+import java.io.File;
 
-@Mojo(name = "skins", requiresProject = false, inheritByDefault = false)
-public class GenerateSkinsMojo extends AbstractMojo {
+@Mojo(name = "atlas", requiresProject = false, inheritByDefault = false)
+public class GenerateAtlasMojo extends AbstractMojo {
 
 	/**
 	 * Folder with images to generate the atlas. If this folder contains other
 	 * folders, it generates an atlas per folder
 	 */
-	@Parameter(property = "skin.svg")
-	private File svgDir;
-
-	@Parameter(property = "skin.images")
-	private File imageDir;
-
-	@Parameter(property = "skin.ninePatch")
-	private File ninePatchDir;
+	@Parameter(property = "atlas.sourceDir")
+	private File sourceDir;
 
 	/** Output folder for the atlas */
-	@Parameter(property = "skin.png")
-	private File outputPngDir;
-
-	@Parameter(property = "skin.scales")
-	private String[] scales;
-
-	@Parameter(property = "skin.ttfs")
-	private Properties ttfs;
+	@Parameter(property = "atlas.outputDir")
+	private File outputDir;
 
 	/** Filter for the texture for the atlas **/
-	@Parameter(property = "skin.atlas.filter", defaultValue = "Nearest")
+	@Parameter(property = "atlas.filter", defaultValue = "Nearest")
 	private TextureFilter filter;
 
 	/** Size for the atlas pages, use for width and height. Must be a power of 2 **/
-	@Parameter(property = "skin.atlas.size", defaultValue = "1024")
+	@Parameter(property = "atlas.size", defaultValue = "1024")
 	private Integer size;
 
-	/** Size for the atlas pages, use for width and height. Must be a power of 2 **/
-	@Parameter(property = "skin.atlas.size", defaultValue = "2048")
-	private Integer maxSize;
-
 	/** Name for the atlas name **/
-	@Parameter(property = "skin.atlas.name", defaultValue = "atlas")
+	@Parameter(property = "atlas.name", defaultValue = "atlas")
 	private String atlasName;
-
-	@Parameter(property = "skin.output")
-	private File outputDir;
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		new GenerateSkins(imageDir, svgDir, ninePatchDir, outputPngDir, scales,
-				ttfs, filter, size, maxSize, atlasName, outputDir).execute();
+		if (sourceDir == null || !sourceDir.exists()) {
+			throw new MojoExecutionException("Invalid source directory: "
+					+ sourceDir);
+		}
+
+		if (outputDir == null) {
+			throw new MojoExecutionException("Invalid output directory: "
+					+ sourceDir);
+		}
+
+		if (!outputDir.exists()) {
+			if (!outputDir.mkdir()) {
+				throw new MojoExecutionException(
+						"Unable to create output directory: " + outputDir);
+			}
+		}
+
+		if (!MathUtils.isPowerOfTwo(size)) {
+			throw new MojoExecutionException("size should be a power of 2");
+		}
+
+		new GenerateAtlas(sourceDir, outputDir, filter, size, null, atlasName,
+				false).execute();
 	}
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package es.eucm.maven.plugins.piel;
+package es.eucm.piel;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
@@ -46,21 +46,23 @@ public class GenerateSkins {
 
 	private File outputDir;
 
+	private boolean force;
+
 	public GenerateSkins(String imagesDir, String svgDir, String ninePatchDir,
 			String outputPngDir, String[] scales, Properties ttfs,
 			TextureFilter filter, Integer size, String atlasName,
-			String outputDir) {
+			String outputDir, boolean force) {
 		this(imagesDir == null ? null : new File(imagesDir),
 				svgDir == null ? null : new File(svgDir),
 				ninePatchDir == null ? null : new File(ninePatchDir),
 				outputPngDir == null ? null : new File(outputPngDir), scales,
-				ttfs, filter, size, null, atlasName, new File(outputDir));
+				ttfs, filter, size, null, atlasName, new File(outputDir), force);
 	}
 
 	public GenerateSkins(File imagesDir, File svgDir, File ninePatchDir,
 			File outputPngDir, String[] scales, Properties ttfs,
 			TextureFilter filter, Integer size, Integer maxSize,
-			String atlasName, File outputDir) {
+			String atlasName, File outputDir, boolean force) {
 		this.imagesDir = imagesDir;
 		this.svgDir = svgDir;
 		this.ninePatchDir = ninePatchDir;
@@ -72,17 +74,19 @@ public class GenerateSkins {
 		this.atlasName = atlasName;
 		this.outputDir = outputDir;
 		this.maxSize = maxSize;
+		this.force = force;
 	}
 
 	public void execute() {
 		boolean updated = false;
 		if (svgDir != null || ninePatchDir != null) {
 			updated = new GeneratePNGs().execute(svgDir, ninePatchDir,
-					outputPngDir, scales);
+					outputPngDir, scales, force);
 		}
 
 		if (imagesDir != null) {
-			if (new GenerateImages().execute(imagesDir, outputPngDir, scales)) {
+			if (new GenerateImages().execute(imagesDir, outputPngDir, scales,
+					force)) {
 				updated = true;
 			}
 		}
@@ -105,13 +109,15 @@ public class GenerateSkins {
 			generated += size;
 
 			if (ttfs != null
-					&& (!fonts.exists() || !generated
-							.equals(fonts.readString()))) {
+					&& (force || (!fonts.exists() || !generated.equals(fonts
+							.readString())))) {
 				System.out.println("Generating fonts from TTFs");
-				new GenerateFonts(ttfs, outputPngDir, scales, size / 4)
+				new GenerateFonts(ttfs, outputPngDir, scales, size / 2)
 						.execute();
 				fonts.writeString(generated, false);
 				updated = true;
+			} else {
+				System.out.println("No TTF fonts updates.");
 			}
 		}
 
@@ -130,5 +136,24 @@ public class GenerateSkins {
 				}
 			}
 		}
+	}
+
+	public static void main(String[] args) {
+		Properties fonts = new Properties();
+		fonts.put(
+				"/home/bender/Dropbox/Proyectos/anserran.com/Pong/smashingball/assets-raw/ttfs/Oswald-Bold.ttf",
+				"10");
+		new GenerateSkins(
+				null,
+				"/home/bender/Dropbox/Proyectos/anserran.com/Pong/smashingball/assets-raw/svg",
+				null,
+				"/home/bender/Dropbox/Proyectos/anserran.com/Pong/smashingball/assets-raw/png",
+				new String[] { "1", "2" },
+				fonts,
+				TextureFilter.Linear,
+				1024,
+				"skin",
+				"/home/bender/Dropbox/Proyectos/anserran.com/Pong/smashingball/assets",
+				true).execute();
 	}
 }

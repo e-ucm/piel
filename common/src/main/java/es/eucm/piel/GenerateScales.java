@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package es.eucm.maven.plugins.piel;
+package es.eucm.piel;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
@@ -35,7 +35,8 @@ public abstract class GenerateScales {
 		this.validExtensions = new Array<String>(validExtensions);
 	}
 
-	public boolean execute(File inputDir, File outputDir, String[] scales) {
+	public boolean execute(File inputDir, File outputDir, String[] scales,
+			boolean force) {
 		boolean modified = false;
 		Float fscales[] = new Float[scales.length];
 		int i = 0;
@@ -70,7 +71,7 @@ public abstract class GenerateScales {
 			}
 		}
 
-		if (update(inputDir, outputDir, fscales)) {
+		if (update(inputDir, outputDir, fscales, force)) {
 			modified = true;
 		}
 
@@ -92,8 +93,9 @@ public abstract class GenerateScales {
 
 	public abstract void scale(File sourceFile, File outputFile, float scale);
 
-	public boolean update(File inputDir, File outputDir, Float[] scales) {
-		LastModified imagesModified = new LastModified(inputDir);
+	public boolean update(File inputDir, File outputDir, Float[] scales,
+			boolean force) {
+		LastModified imagesModified = new LastModified(inputDir, force);
 
 		if (!inputDir.exists()) {
 			inputDir.mkdirs();

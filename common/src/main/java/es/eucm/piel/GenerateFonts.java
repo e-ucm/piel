@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package es.eucm.maven.plugins.piel;
+package es.eucm.piel;
 
-import es.eucm.maven.plugins.piel.fonts.TTFtoFNT;
+import es.eucm.piel.fonts.TTFtoFNT;
 
 import java.io.File;
 import java.util.Map.Entry;
@@ -40,12 +40,16 @@ public class GenerateFonts {
 
 	public void execute() {
 		for (Entry<Object, Object> e : ttfs.entrySet()) {
-			TTFtoFNT toFNT = new TTFtoFNT(new File(e.getKey().toString()));
+			File fontFile = new File(e.getKey().toString());
+			TTFtoFNT toFNT = new TTFtoFNT(fontFile);
+			System.out.println("Generating font " + fontFile.getName());
 			for (String scaleString : scales) {
 				float scale = Float.parseFloat(scaleString);
 				File output = new File(outputDir, GeneratePNGs.PREFIX + scale);
 				output.mkdirs();
+				System.out.println("Generating scale " + scale);
 				for (String sizeString : e.getValue().toString().split(";")) {
+					System.out.println("Generating size " + sizeString);
 					int size = Integer.parseInt(sizeString);
 					toFNT.toFnt(size, scale, output, atlasSize);
 				}

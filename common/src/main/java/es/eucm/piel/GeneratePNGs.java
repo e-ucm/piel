@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package es.eucm.maven.plugins.piel;
+package es.eucm.piel;
 
-import es.eucm.maven.plugins.piel.svg.BatikNinePatch;
-import es.eucm.maven.plugins.piel.svg.BatikPNG;
-import es.eucm.maven.plugins.piel.svg.SVGtoPNG;
+import es.eucm.piel.svg.BatikNinePatch;
+import es.eucm.piel.svg.BatikPNG;
+import es.eucm.piel.svg.SVGtoPNG;
 
 import java.io.File;
 
@@ -34,17 +34,17 @@ public class GeneratePNGs extends GenerateScales {
 	}
 
 	public boolean execute(File svgDir, File ninePatchDir, File outputDir,
-			String[] scales) {
+			String[] scales, boolean force) {
 		boolean modified = false;
 		svGtoPNG = png;
 		outputExtension = ".png";
-		if (svgDir != null && super.execute(svgDir, outputDir, scales)) {
+		if (svgDir != null && super.execute(svgDir, outputDir, scales, force)) {
 			modified = true;
 		}
 		svGtoPNG = ninePatch;
 		outputExtension = ".9.png";
 		if (ninePatchDir != null
-				&& super.execute(ninePatchDir, outputDir, scales)) {
+				&& super.execute(ninePatchDir, outputDir, scales, force)) {
 			modified = true;
 		}
 		return modified;

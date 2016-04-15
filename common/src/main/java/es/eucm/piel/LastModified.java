@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package es.eucm.maven.plugins.piel;
+package es.eucm.piel;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
@@ -35,7 +35,10 @@ public class LastModified {
 
 	private boolean updated = false;
 
-	public LastModified(File folder) {
+	private boolean force;
+
+	public LastModified(File folder, boolean force) {
+		this.force = force;
 		fh = new FileHandle(new File(folder, FILE));
 		if (fh.exists()) {
 			for (String line : fh.readString().replace("\r", "").split("\n")) {
@@ -61,6 +64,9 @@ public class LastModified {
 	}
 
 	public boolean isModified(File file) {
+		if (force) {
+			return true;
+		}
 		Long modified = lastModified.get(file.getName());
 		boolean result = modified == null || modified < file.lastModified();
 		if (result) {

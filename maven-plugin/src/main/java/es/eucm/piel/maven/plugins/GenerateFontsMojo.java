@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package es.eucm.maven.plugins.piel.mojos;
+package es.eucm.piel.maven.plugins;
 
-import es.eucm.maven.plugins.piel.GeneratePNGs;
+import es.eucm.maven.plugins.piel.GenerateFonts;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -23,30 +23,26 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
+import java.util.Properties;
 
-@Mojo(name = "pngs", requiresProject = false, inheritByDefault = false)
-public class GeneratePNGsMojo extends AbstractMojo {
+@Mojo(name = "fonts", requiresProject = false, inheritByDefault = false)
+public class GenerateFontsMojo extends AbstractMojo {
 
-	/**
-	 * Folder with images to generate the atlas. If this folder contains other
-	 * folders, it generates an atlas per folder
-	 */
-	@Parameter(property = "png.svgDir")
-	private File svgDir;
-
-	@Parameter(property = "png.ninePatchDir")
-	private File ninePatchDir;
+	@Parameter(property = "font.ttfs")
+	private Properties ttfs;
 
 	/** Output folder for the atlas */
-	@Parameter(property = "png.outputDir")
+	@Parameter(property = "font.outputDir")
 	private File outputDir;
 
-	@Parameter(property = "png.scales")
+	@Parameter(property = "font.scales")
 	private String[] scales;
+
+	@Parameter(property = "font.atlasSize", defaultValue = "1024")
+	private Integer atlasSize;
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		getLog().info("PNGs generation for " + scales.length + " scales");
-		new GeneratePNGs().execute(svgDir, ninePatchDir, outputDir, scales);
+		new GenerateFonts(ttfs, outputDir, scales, atlasSize).execute();
 	}
 }
