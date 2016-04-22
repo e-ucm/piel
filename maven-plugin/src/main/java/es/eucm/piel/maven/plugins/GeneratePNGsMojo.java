@@ -33,14 +33,14 @@ public class GeneratePNGsMojo extends AbstractMojo {
 	 * folders, it generates an atlas per folder
 	 */
 	@Parameter(property = "png.svg")
-	private File svgDir;
+	private File svg;
 
 	@Parameter(property = "png.ninePatch")
-	private File ninePatchDir;
+	private File ninePatch;
 
 	/** Output folder for the atlas */
 	@Parameter(property = "png.output")
-	private File outputDir;
+	private File output;
 
 	@Parameter(property = "png.scales")
 	private String[] scales;
@@ -50,6 +50,6 @@ public class GeneratePNGsMojo extends AbstractMojo {
 		getLog().info("PNGs generation for " + scales.length + " scales");
 		ScalesConfig config = new ScalesConfig();
 		config.scales = Utils.toFloat(scales);
-		new GeneratePNGs().execute(svgDir, ninePatchDir, outputDir, config);
+		new GeneratePNGs().execute(svg, ninePatch, output, config);
 	}
 }

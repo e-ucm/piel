@@ -1,12 +1,12 @@
-# Piel - Java utilities to create images an atlas for many resolutions using SVG
+# Piel - Java utilities to create images and atlas for multiple resolutions using SVG
 
-Creating images resources for multiple device resolutions is always a pain. **Piel** makes easier that providing a set of tools to: 
+Creating images and atlas for multiple resolutions is always a pain. **Piel** makes it easier providing a set of tools to: 
 
-* Generate PNG images and 9 patches in multiple resolutions from SVGs
-* Create images atlas
+* Generate PNG and 9 patches in multiple resolutions from SVGs
+* Create atlas
 * Generate fonts in .fnt format for multiple resolutions with different sizes
 * Generate complete skins combining images, 9 patches and ttf fonts
-* Tools available as Java classes and as Maven plugins
+* Tools available as Java library and Maven plugin
 
 ## Apache License 2.0
 
@@ -59,14 +59,14 @@ myproject
             - button.9.png (15x15 + 2x2 9 patch border = 17x17)
 ```
 
-**NOTICE ABOUT 9 PATCHES**: To generate 9 patches correctly, borders marking margin and padding in the 9 patch must be of **exactly 1 px** in the source svg, and must be **inside** the view box area of svg. Example:
+**NOTICE ABOUT 9 PATCHES**: To generate 9 patches correctly, borders marking margin and padding in the 9 patch must be **exactly 1 px** in the source svg, and must be **inside** the view box area of svg. Example:
 
 ![9 patch Example](svg-example.png)
 
 ### Using Java
 
 ```java
-new GeneratePNGs().execute("/myproject/svg", "/myproject/9patch", "/myproject/png", new String[]{"1", "2", "0.5"});
+new GeneratePNGs().execute(new File("/myproject/svg"), new File("/myproject/9patch"), new File("/myproject/png"), new String[]{"1", "2", "0.5"});
 ```
 
 ### Using Maven plugin
@@ -116,12 +116,12 @@ And you want to generate .fnt files for Roboto.ttf, for sizes 14 and 47, and you
 myproject
     + Roboto.ttf
     + fonts
-        + scale1.0
+        + 1.0
            - Roboto-14.fnt
            - Roboto-14.png
            - Roboto-47.fnt
            - Roboto-47.png
-        + scale2.0
+        + 2.0
            - Roboto-14.fnt (This is equivalent to Roboto 28 in scale 1.0)
            - Roboto-14.png
            - Roboto-47.fnt (This is equivalent to Roboto 94 in scale 1.0)

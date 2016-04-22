@@ -34,7 +34,7 @@ public class GenerateSkinsMojo extends AbstractMojo {
 
 	/** Output folder for the atlas */
 	@Parameter(property = "skin.input")
-	private File inputDir;
+	private File input;
 
 	@Parameter(property = "skin.scales")
 	private String[] scales;
@@ -43,7 +43,7 @@ public class GenerateSkinsMojo extends AbstractMojo {
 	private FontParameter[] ttfs;
 
 	/** Filter for the texture for the atlas **/
-	@Parameter(property = "skin.atlas.filter", defaultValue = "Nearest")
+	@Parameter(property = "skin.filter", defaultValue = "Nearest")
 	private TextureFilter filter;
 
 	/** Size for the atlas pages, use for width and height. Must be a power of 2 **/
@@ -65,7 +65,7 @@ public class GenerateSkinsMojo extends AbstractMojo {
 	private Boolean force;
 
 	@Parameter(property = "skin.output")
-	private File outputDir;
+	private File output;
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
@@ -79,7 +79,7 @@ public class GenerateSkinsMojo extends AbstractMojo {
 		FontsConfig fontsConfig = Utils
 				.fontConfig(scales, ttfs, fontsAtlasSize);
 		fontsConfig.force = force;
-		new GenerateSkins().execute(inputDir, outputDir, new SkinsConfig(),
+		new GenerateSkins().execute(input, output, new SkinsConfig(),
 				fontsConfig, atlasConfig);
 
 	}

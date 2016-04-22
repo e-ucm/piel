@@ -34,12 +34,12 @@ public class GenerateAtlasMojo extends AbstractMojo {
 	 * Folder with images to generate the atlas. If this folder contains other
 	 * folders, it generates an atlas per folder
 	 */
-	@Parameter(property = "atlas.inputDir")
-	private File inputDir;
+	@Parameter(property = "atlas.input")
+	private File input;
 
 	/** Output folder for the atlas */
-	@Parameter(property = "atlas.outputDir")
-	private File outputDir;
+	@Parameter(property = "atlas.output")
+	private File output;
 
 	/** Filter for the texture for the atlas **/
 	@Parameter(property = "atlas.filter", defaultValue = "Nearest")
@@ -55,20 +55,20 @@ public class GenerateAtlasMojo extends AbstractMojo {
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		if (inputDir == null || !inputDir.exists()) {
+		if (input == null || !input.exists()) {
 			throw new MojoExecutionException("Invalid source directory: "
-					+ inputDir);
+					+ input);
 		}
 
-		if (outputDir == null) {
+		if (output == null) {
 			throw new MojoExecutionException("Invalid output directory: "
-					+ inputDir);
+					+ input);
 		}
 
-		if (!outputDir.exists()) {
-			if (!outputDir.mkdir()) {
+		if (!output.exists()) {
+			if (!output.mkdir()) {
 				throw new MojoExecutionException(
-						"Unable to create output directory: " + outputDir);
+						"Unable to create output directory: " + output);
 			}
 		}
 
@@ -80,6 +80,6 @@ public class GenerateAtlasMojo extends AbstractMojo {
 		config.atlasName = atlasName;
 		config.filter = filter;
 		config.size = size;
-		new GenerateAtlas().execute(inputDir, outputDir, config);
+		new GenerateAtlas().execute(input, output, config);
 	}
 }

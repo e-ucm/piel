@@ -113,6 +113,15 @@ public class GenerateSkins {
 		} else {
 			System.out.println("No updates were found.");
 		}
+
+		// Copy skin.json to all scales
+		FileHandle skin = new FileHandle(new File(outputDir, "skin.json"));
+		if (skin.exists()) {
+			for (float scale : fontsConfig.scales) {
+				skin.copyTo(skin.parent().child(Float.toString(scale))
+						.child("skin.json"));
+			}
+		}
 	}
 
 }
