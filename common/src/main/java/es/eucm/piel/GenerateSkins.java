@@ -27,16 +27,6 @@ public class GenerateSkins {
 	public static class SkinsConfig {
 
 		/**
-		 * Folder where svgs are stored
-		 */
-		public String svgs = "svg";
-
-		/**
-		 * Folder where 9 patches are stored
-		 */
-		public String patches = "9patch";
-
-		/**
 		 * Folder where images are stored
 		 */
 		public String images = "images";
@@ -53,16 +43,15 @@ public class GenerateSkins {
 		boolean updated = false;
 
 		File pngOutput = new File(inputDir, skinsConfig.png);
-		if (new GeneratePNGs()
-				.execute(new File(inputDir, skinsConfig.svgs), new File(
-						inputDir, skinsConfig.patches), pngOutput, fontsConfig)) {
-			updated = true;
-		}
+		/*
+		 * if (new GeneratePNGs() .execute(inputDir, pngOutput, fontsConfig)) {
+		 * updated = true; }
+		 */
 
-		if (new GenerateImages().execute(
-				new File(inputDir, skinsConfig.images), pngOutput, fontsConfig)) {
-			updated = true;
-		}
+		/*
+		 * if (new GenerateImages().generate( new File(inputDir,
+		 * skinsConfig.images), pngOutput, fontsConfig)) { updated = true; }
+		 */
 
 		if (fontsConfig.fonts != null) {
 			FileHandle fontsCached = new FileHandle(new File(pngOutput,
@@ -78,22 +67,21 @@ public class GenerateSkins {
 				}
 			}
 
-			for (float scale : fontsConfig.scales) {
-				generated += scale + ";";
-			}
+			/*
+			 * for (float scale : fontsConfig.scales) { generated += scale +
+			 * ";"; }
+			 */
 
 			generated += fontsConfig.atlasSize;
 
-			if (fontsConfig.force
-					|| (!fontsCached.exists() || !generated.equals(fontsCached
-							.readString()))) {
-				System.out.println("Generating fonts from TTFs");
-				new GenerateFonts().execute(pngOutput, fontsConfig);
-				fontsCached.writeString(generated, false);
-				updated = true;
-			} else {
-				System.out.println("No TTF fonts updates.");
-			}
+			/*
+			 * if (fontsConfig.force || (!fontsCached.exists() ||
+			 * !generated.equals(fontsCached .readString()))) {
+			 * System.out.println("Generating fonts from TTFs"); new
+			 * GenerateFonts().execute(pngOutput, fontsConfig);
+			 * fontsCached.writeString(generated, false); updated = true; } else
+			 * { System.out.println("No TTF fonts updates."); }
+			 */
 		}
 
 		if (updated) {
@@ -117,10 +105,11 @@ public class GenerateSkins {
 		// Copy skin.json to all scales
 		FileHandle skin = new FileHandle(new File(outputDir, "skin.json"));
 		if (skin.exists()) {
-			for (float scale : fontsConfig.scales) {
-				skin.copyTo(skin.parent().child(Float.toString(scale))
-						.child("skin.json"));
-			}
+			/*
+			 * for (float scale : fontsConfig.scales) {
+			 * skin.copyTo(skin.parent().child(Float.toString(scale))
+			 * .child("skin.json")); }
+			 */
 		}
 	}
 

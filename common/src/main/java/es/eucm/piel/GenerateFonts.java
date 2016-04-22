@@ -15,14 +15,13 @@
  */
 package es.eucm.piel;
 
-import es.eucm.piel.GenerateScales.ScalesConfig;
 import es.eucm.piel.fonts.TTFtoFNT;
 
 import java.io.File;
 
 public class GenerateFonts {
 
-	public static class FontsConfig extends ScalesConfig {
+	public static class FontsConfig /* extends ScalesConfig */{
 
 		public FontConfig[] fonts;
 
@@ -47,16 +46,14 @@ public class GenerateFonts {
 			File fontFile = new File(font.file);
 			TTFtoFNT toFNT = new TTFtoFNT(fontFile);
 			System.out.println("Generating font " + fontFile.getName());
-			for (float scale : fontsConfig.scales) {
-				File output = new File(outputDir, Float.toString(scale));
-				output.mkdir();
-				System.out.println("Generating scale " + scale);
-				for (int size : font.sizes) {
-					System.out.println("Generating size " + size);
-					toFNT.toFnt(size, scale, fontsConfig.atlasSize,
-							font.characters, output);
-				}
-			}
+			/*
+			 * for (float scale : fontsConfig.scales) { File output = new
+			 * File(outputDir, Float.toString(scale)); output.mkdir();
+			 * System.out.println("Generating scale " + scale); for (int size :
+			 * font.sizes) { System.out.println("Generating size " + size);
+			 * toFNT.toFnt(size, scale, fontsConfig.atlasSize, font.characters,
+			 * output); } }
+			 */
 		}
 	}
 }

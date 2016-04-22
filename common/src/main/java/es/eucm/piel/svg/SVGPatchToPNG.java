@@ -26,7 +26,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class BatikNinePatch extends BatikPNG {
+public class SVGPatchToPNG extends SVGtoPNG {
 
 	private static final int TRANSPARENT = Color.toIntBits(0, 0, 0, 0);
 

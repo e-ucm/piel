@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package es.eucm.piel.maven.plugins;
+package es.eucm.piel.maven;
 
-import es.eucm.piel.GeneratePNGs;
-import es.eucm.piel.GenerateScales.ScalesConfig;
+import es.eucm.piel.GenerateFonts;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -25,31 +24,34 @@ import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
 
-@Mojo(name = "pngs", requiresProject = false, inheritByDefault = false)
-public class GeneratePNGsMojo extends AbstractMojo {
+@Mojo(name = "fonts", requiresProject = false, inheritByDefault = false)
+public class GenerateFontsMojo extends AbstractMojo {
 
-	/**
-	 * Folder with images to generate the atlas. If this folder contains other
-	 * folders, it generates an atlas per folder
-	 */
-	@Parameter(property = "png.svg")
-	private File svg;
-
-	@Parameter(property = "png.ninePatch")
-	private File ninePatch;
+	@Parameter(property = "font.ttfs")
+	private FontParameter[] ttfs;
 
 	/** Output folder for the atlas */
-	@Parameter(property = "png.output")
-	private File output;
+	@Parameter(property = "font.outputDir")
+	private File outputDir;
 
-	@Parameter(property = "png.scales")
+	@Parameter(property = "font.scales")
 	private String[] scales;
+
+	@Parameter(property = "font.atlasSize", defaultValue = "1024")
+	private Integer atlasSize;
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		getLog().info("PNGs generation for " + scales.length + " scales");
-		ScalesConfig config = new ScalesConfig();
-		config.scales = Utils.toFloat(scales);
-		new GeneratePNGs().execute(svg, ninePatch, output, config);
+		new GenerateFonts().execute(outputDir,
+				Utils.fontConfig(scales, ttfs, atlasSize));
+	}
+
+	public static class FontParameter {
+
+		public String file;
+
+		public String sizes;
+
+		public String characters;
 	}
 }

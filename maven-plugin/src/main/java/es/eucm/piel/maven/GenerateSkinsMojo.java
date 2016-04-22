@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package es.eucm.piel.maven.plugins;
+package es.eucm.piel.maven;
 
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import es.eucm.piel.GenerateAtlas.AtlasConfig;
 import es.eucm.piel.GenerateFonts.FontsConfig;
 import es.eucm.piel.GenerateSkins;
 import es.eucm.piel.GenerateSkins.SkinsConfig;
-import es.eucm.piel.maven.plugins.GenerateFontsMojo.FontParameter;
+import es.eucm.piel.maven.GenerateFontsMojo.FontParameter;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -78,7 +78,6 @@ public class GenerateSkinsMojo extends AbstractMojo {
 		}
 		FontsConfig fontsConfig = Utils
 				.fontConfig(scales, ttfs, fontsAtlasSize);
-		fontsConfig.force = force;
 		new GenerateSkins().execute(input, output, new SkinsConfig(),
 				fontsConfig, atlasConfig);
 
