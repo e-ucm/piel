@@ -36,6 +36,8 @@ public class GenerateImagesTest {
 	private static GenerateImages generateImages;
 	private FileHandle input, output;
 	private static float[] scales;
+	private static String[] extensions = new String[] { "svg", "9.svg", "bmp",
+			"gif", "jpeg", "jpg", "PNG" };
 
 	@BeforeClass
 	public static void setUpClass() {
@@ -48,8 +50,10 @@ public class GenerateImagesTest {
 		FileHandle temp = FileHandle.tempDirectory("piel");
 		input = temp.child("input");
 		input.mkdirs();
-		new LwjglFileHandle("ship.svg", FileType.Classpath).copyTo(input);
-		new LwjglFileHandle("textbox.9.svg", FileType.Classpath).copyTo(input);
+		for (String extension : extensions) {
+			new LwjglFileHandle("image." + extension, FileType.Classpath)
+					.copyTo(input);
+		}
 
 		output = temp.child("output");
 	}
@@ -59,15 +63,16 @@ public class GenerateImagesTest {
 		generateImages.generate(input.file(), output.file(), scales);
 		assertEquals(scales.length, output.list().length);
 		for (float scale : scales) {
-			testScale(output.child(Float.toString(scale)), scale);
+			for (String extension : extensions) {
+				int extra = "9.svg".equals(extension) ? 2 : 0;
+				String ext = "9.svg".equals(extension) ? "9.png" : "svg"
+						.equals(extension) ? "png" : extension;
+				testSize(
+						output.child(Float.toString(scale))
+								.child("image." + ext).file(),
+						(int) (20 * scale) + extra, (int) (20 * scale) + extra);
+			}
 		}
-	}
-
-	private void testScale(FileHandle folder, float scale) {
-		testSize(folder.child("textbox.9.png").file(), (int) (66 * scale) + 2,
-				(int) (66 * scale) + 2);
-		testSize(folder.child("ship.png").file(), (int) (66 * scale),
-				(int) (66 * scale));
 	}
 
 	private void testSize(File file, int width, int height) {
