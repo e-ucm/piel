@@ -15,12 +15,8 @@
  */
 package es.eucm.piel.maven;
 
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import es.eucm.piel.GenerateAtlas.AtlasConfig;
-import es.eucm.piel.GenerateFonts.FontsConfig;
-import es.eucm.piel.GenerateSkins;
-import es.eucm.piel.GenerateSkins.SkinsConfig;
-import es.eucm.piel.maven.GenerateFontsMojo.FontParameter;
+import es.eucm.piel.SkinsGenerator;
+import es.eucm.piel.Utils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -32,54 +28,18 @@ import java.io.File;
 @Mojo(name = "skins", requiresProject = false, inheritByDefault = false)
 public class GenerateSkinsMojo extends AbstractMojo {
 
-	/** Output folder for the atlas */
-	@Parameter(property = "skin.input")
+	@Parameter(property = "piel.input")
 	private File input;
 
-	@Parameter(property = "skin.scales")
-	private String[] scales;
-
-	@Parameter(property = "skin.ttfs")
-	private FontParameter[] ttfs;
-
-	/** Filter for the texture for the atlas **/
-	@Parameter(property = "skin.filter", defaultValue = "Nearest")
-	private TextureFilter filter;
-
-	/** Size for the atlas pages, use for width and height. Must be a power of 2 **/
-	@Parameter(property = "skin.atlas.size", defaultValue = "1024")
-	private Integer atlasSize;
-
-	@Parameter(property = "skin.fonts.atlasSize", defaultValue = "1024")
-	private Integer fontsAtlasSize;
-
-	/** Size for the atlas pages, use for width and height. Must be a power of 2 **/
-	@Parameter(property = "skin.atlas.size", defaultValue = "2048")
-	private Integer maxSize;
-
-	/** Name for the atlas name **/
-	@Parameter(property = "skin.atlas.name", defaultValue = "atlas")
-	private String atlasName;
-
-	@Parameter(property = "skin.force", defaultValue = "false")
-	private Boolean force;
-
-	@Parameter(property = "skin.output")
+	/** Output folder for the atlas */
+	@Parameter(property = "piel.output")
 	private File output;
+
+	@Parameter(property = "piel.scales")
+	private String[] scales;
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		AtlasConfig atlasConfig = new AtlasConfig();
-		atlasConfig.size = atlasSize;
-		atlasConfig.atlasName = atlasName;
-		atlasConfig.filter = filter;
-		if (fontsAtlasSize == null) {
-			fontsAtlasSize = atlasSize / 2;
-		}
-		FontsConfig fontsConfig = Utils
-				.fontConfig(scales, ttfs, fontsAtlasSize);
-		new GenerateSkins().execute(input, output, new SkinsConfig(),
-				fontsConfig, atlasConfig);
-
+		new SkinsGenerator().generate(input, output, Utils.toFloat(scales));
 	}
 }

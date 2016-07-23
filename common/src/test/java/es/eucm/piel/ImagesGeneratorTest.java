@@ -31,9 +31,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class GenerateImagesTest {
+public class ImagesGeneratorTest {
 
-	private static GenerateImages generateImages;
+	private static ImagesGenerator imagesGenerator;
 	private FileHandle input, output;
 	private static float[] scales;
 	private static String[] extensions = new String[] { "svg", "9.svg", "bmp",
@@ -41,7 +41,7 @@ public class GenerateImagesTest {
 
 	@BeforeClass
 	public static void setUpClass() {
-		generateImages = new GenerateImages();
+		imagesGenerator = new ImagesGenerator();
 		scales = new float[] { 0.5f, 1, 2 };
 	}
 
@@ -60,7 +60,7 @@ public class GenerateImagesTest {
 
 	@Test
 	public void testImages() {
-		generateImages.generate(input.file(), output.file(), scales);
+		imagesGenerator.generate(input.file(), output.file(), scales);
 		assertEquals(scales.length, output.list().length);
 		for (float scale : scales) {
 			for (String extension : extensions) {

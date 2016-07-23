@@ -17,8 +17,8 @@ package es.eucm.piel.maven;
 
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.math.MathUtils;
-import es.eucm.piel.GenerateAtlas;
-import es.eucm.piel.GenerateAtlas.AtlasConfig;
+import es.eucm.piel.AtlasGenerator;
+import es.eucm.piel.AtlasGenerator.AtlasConfig;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -34,23 +34,23 @@ public class GenerateAtlasMojo extends AbstractMojo {
 	 * Folder with images to generate the atlas. If this folder contains other
 	 * folders, it generates an atlas per folder
 	 */
-	@Parameter(property = "atlas.input")
+	@Parameter(property = "piel.input")
 	private File input;
 
 	/** Output folder for the atlas */
-	@Parameter(property = "atlas.output")
+	@Parameter(property = "piel.output")
 	private File output;
 
 	/** Filter for the texture for the atlas **/
-	@Parameter(property = "atlas.filter", defaultValue = "Nearest")
+	@Parameter(property = "piel.filter", defaultValue = "Nearest")
 	private TextureFilter filter;
 
 	/** Size for the atlas pages, use for width and height. Must be a power of 2 **/
-	@Parameter(property = "atlas.size", defaultValue = "1024")
+	@Parameter(property = "piel.size", defaultValue = "1024")
 	private Integer size;
 
 	/** Name for the atlas name **/
-	@Parameter(property = "atlas.name", defaultValue = "atlas")
+	@Parameter(property = "piel.name", defaultValue = "atlas")
 	private String atlasName;
 
 	@Override
@@ -80,6 +80,6 @@ public class GenerateAtlasMojo extends AbstractMojo {
 		config.atlasName = atlasName;
 		config.filter = filter;
 		config.size = size;
-		new GenerateAtlas().execute(input, output, config);
+		new AtlasGenerator().generate(input, output, config);
 	}
 }

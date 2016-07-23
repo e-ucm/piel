@@ -18,11 +18,10 @@ package es.eucm.piel;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
-import com.badlogic.gdx.utils.Array;
 
 import java.io.File;
 
-public class GenerateAtlas {
+public class AtlasGenerator extends Generator {
 
 	public static class AtlasConfig {
 
@@ -33,31 +32,16 @@ public class GenerateAtlas {
 		public int size = 1024;
 	}
 
-	public void execute(File inputDir, File outputDir, AtlasConfig config) {
+	public void generate(File input, File output, float scale) {
+		generate(input, output, new AtlasConfig());
+	}
+
+	public void generate(File input, File output, AtlasConfig config) {
 		Settings settings = new Settings();
 		settings.limitMemory = false;
 		settings.filterMag = settings.filterMin = config.filter;
-
-		Array<File> imageFolders = new Array<File>();
-		for (File child : inputDir.listFiles()) {
-			if (child.isDirectory()) {
-				imageFolders.add(child);
-			}
-		}
-
-		if (imageFolders.size == 0) {
-			imageFolders.add(inputDir);
-		}
-
-		for (File folder : imageFolders) {
-			String outputPath = outputDir.getAbsolutePath()
-					+ "/"
-					+ folder.getAbsolutePath().substring(
-							inputDir.getAbsolutePath().length());
-			settings.maxWidth = settings.maxHeight = config.size;
-			TexturePacker.process(settings, folder.getAbsolutePath(),
-					outputPath, config.atlasName);
-		}
-
+		settings.maxWidth = settings.maxHeight = config.size;
+		TexturePacker.process(settings, input.getAbsolutePath(),
+				output.getAbsolutePath(), config.atlasName);
 	}
 }

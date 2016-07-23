@@ -15,7 +15,7 @@
  */
 package es.eucm.piel.maven;
 
-import es.eucm.piel.GenerateFonts;
+import es.eucm.piel.FontsGenerator;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -27,31 +27,18 @@ import java.io.File;
 @Mojo(name = "fonts", requiresProject = false, inheritByDefault = false)
 public class GenerateFontsMojo extends AbstractMojo {
 
-	@Parameter(property = "font.ttfs")
-	private FontParameter[] ttfs;
+	@Parameter(property = "piel.input")
+	private File input;
 
 	/** Output folder for the atlas */
-	@Parameter(property = "font.outputDir")
-	private File outputDir;
+	@Parameter(property = "piel.output")
+	private File output;
 
-	@Parameter(property = "font.scales")
-	private String[] scales;
-
-	@Parameter(property = "font.atlasSize", defaultValue = "1024")
-	private Integer atlasSize;
+	@Parameter(property = "piel.scales")
+	private float[] scales;
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		new GenerateFonts().execute(outputDir,
-				Utils.fontConfig(scales, ttfs, atlasSize));
-	}
-
-	public static class FontParameter {
-
-		public String file;
-
-		public String sizes;
-
-		public String characters;
+		new FontsGenerator().generate(input, output, scales);
 	}
 }

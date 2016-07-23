@@ -25,7 +25,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class GenerateImages {
+public class ImagesGenerator extends Generator {
 
 	private SVGtoPNG png = new SVGtoPNG();
 
@@ -34,33 +34,9 @@ public class GenerateImages {
 	/**
 	 * Scales all images contained in input
 	 */
-	public void generate(File input, File output, float... scales) {
-
-		if (input == null || !input.exists() || input.listFiles() == null) {
-			throw new RuntimeException("Input folder must exist an be a folder");
-		}
-		if (output == null) {
-			throw new RuntimeException("Output folder cannot be null");
-		}
-
-		if (!output.exists()) {
-			if (!output.mkdirs()) {
-				throw new RuntimeException("Unable to create output folder");
-			}
-		}
-
-		for (float scale : scales) {
-			File scaledFolder = new File(output, Float.toString(scale));
-			if (!scaledFolder.exists()) {
-				if (!scaledFolder.mkdir()) {
-					throw new RuntimeException("Error creating output folder "
-							+ scaledFolder);
-				}
-			}
-
-			for (File source : input.listFiles()) {
-				scale(source, scaledFolder, scale);
-			}
+	public void generate(File input, File output, float scale) {
+		for (File source : input.listFiles()) {
+			scale(source, output, scale);
 		}
 	}
 
@@ -69,6 +45,7 @@ public class GenerateImages {
 	 */
 	public void scale(File sourceFile, File outputFolder, float scale) {
 		FileHandle src = new FileHandle(sourceFile);
+
 		if ("svg".equals(src.extension())) {
 			SVGtoPNG svGtoPNG = sourceFile.getName().endsWith(".9.svg") ? ninePatch
 					: png;

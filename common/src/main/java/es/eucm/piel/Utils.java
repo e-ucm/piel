@@ -13,11 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package es.eucm.piel.maven;
-
-import es.eucm.piel.GenerateFonts.FontConfig;
-import es.eucm.piel.GenerateFonts.FontsConfig;
-import es.eucm.piel.maven.GenerateFontsMojo.FontParameter;
+package es.eucm.piel;
 
 public class Utils {
 
@@ -37,22 +33,6 @@ public class Utils {
 			result[i++] = Integer.parseInt(string);
 		}
 		return result;
-	}
-
-	public static FontsConfig fontConfig(String[] scales, FontParameter[] ttfs,
-			int atlasSize) {
-		FontsConfig config = new FontsConfig();
-		config.atlasSize = atlasSize;
-		config.fonts = new FontConfig[ttfs.length];
-		int i = 0;
-		for (FontParameter fontParameter : ttfs) {
-			FontConfig fontConfig = new FontConfig();
-			fontConfig.file = fontParameter.file;
-			fontConfig.characters = fontParameter.characters;
-			fontConfig.sizes = Utils.toInt(fontParameter.sizes.split(";"));
-			config.fonts[i++] = fontConfig;
-		}
-		return config;
 	}
 
 }

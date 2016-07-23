@@ -15,7 +15,7 @@
  */
 package es.eucm.piel.maven;
 
-import es.eucm.piel.GenerateImages;
+import es.eucm.piel.ImagesGenerator;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -44,6 +44,6 @@ public class GenerateImagesMojo extends AbstractMojo {
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		getLog().info("PNGs generation for " + scales.length + " scales");
-		new GenerateImages().generate(input, output, scales);
+		new ImagesGenerator().generate(input, output, scales);
 	}
 }
