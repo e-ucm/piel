@@ -20,6 +20,8 @@ import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
 
 import java.io.File;
+import java.io.FileReader;
+import java.util.Properties;
 
 public class AtlasGenerator extends Generator {
 
@@ -27,13 +29,32 @@ public class AtlasGenerator extends Generator {
 
 		public TextureFilter filter = TextureFilter.Linear;
 
-		public String atlasName = "atlas";
+		public String name = "atlas";
 
 		public int size = 1024;
 	}
 
 	public void generate(File input, File output, float scale) {
-		generate(input, output, new AtlasConfig());
+		File atlasProperties = new File(input, "atlas.properties");
+		AtlasConfig atlasConfig = new AtlasConfig();
+		if (atlasProperties.exists()) {
+			try {
+				Properties properties = new Properties();
+				properties.load(new FileReader(atlasProperties));
+				atlasConfig.name = properties.getProperty("name", "atlas");
+				atlasConfig.size = properties.containsKey("size") ? Integer
+						.parseInt(properties.getProperty("size")) : 1024;
+				String filter = properties.getProperty("filter", "linear");
+				if ("linear".equals(filter)) {
+					atlasConfig.filter = TextureFilter.Linear;
+				} else if ("nearest".equals(filter)) {
+					atlasConfig.filter = TextureFilter.Nearest;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		generate(input, output, atlasConfig);
 	}
 
 	public void generate(File input, File output, AtlasConfig config) {
@@ -42,6 +63,6 @@ public class AtlasGenerator extends Generator {
 		settings.filterMag = settings.filterMin = config.filter;
 		settings.maxWidth = settings.maxHeight = config.size;
 		TexturePacker.process(settings, input.getAbsolutePath(),
-				output.getAbsolutePath(), config.atlasName);
+				output.getAbsolutePath(), config.name);
 	}
 }

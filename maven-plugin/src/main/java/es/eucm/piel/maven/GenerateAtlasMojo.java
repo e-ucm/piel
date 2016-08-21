@@ -77,7 +77,7 @@ public class GenerateAtlasMojo extends AbstractMojo {
 		}
 
 		AtlasConfig config = new AtlasConfig();
-		config.atlasName = atlasName;
+		config.name = atlasName;
 		config.filter = filter;
 		config.size = size;
 		new AtlasGenerator().generate(input, output, config);
